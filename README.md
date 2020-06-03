@@ -1,6 +1,6 @@
 
 ```docker
-docker build -t dockerhandson/spring-boot-mongo .
+docker build -t ouhamzalhss/spring-boot-mongo-demo .
 ```
 
 ```docker-compose 
