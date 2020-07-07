@@ -1,6 +1,5 @@
 FROM openjdk:8-alpine
 
-RUN apk --update add python
 # Required for starting application up.
 RUN apk update && apk add /bin/sh
 
