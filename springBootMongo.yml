@@ -52,8 +52,8 @@ spec:
         name: mongo
         ports:
         - name: mongo
-          containerPort: 27017
-          hostPort: 27017
+          containerPort: 27107
+          hostPort: 27107
         volumeMounts:
         - name: mongo-persistent-storage
           mountPath: /data/db
