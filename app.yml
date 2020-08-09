@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: movie-db-config
+data:
+ host: moviedb-service
+ database: moviemanagement
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: movie-service
+spec:
+  selector:
+    app: movie-service
+  ports:
+  - protocol: TCP
+    port: 8080
+    nodePort: 30081
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-service
+spec:
+  selector:
+      matchLabels:
+        app: movie-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: movie-service
+    spec:
+      containers:
+        - name: movie-service
+          image: ouhamzalhss/spring-boot-mongo
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 8080
+          env:
+            - name: MONGO_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-db-config  
+                  key: database
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-db-config 
+                  key: host
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: moviedb
+  name: moviedb-service
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: moviedb
+  clusterIP: None
+    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moviedb
+  labels:
+    app: moviedb
+spec:
+  selector: 
+    matchLabels:
+      app: moviedb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: moviedb
+      name: moviedb-service
+
+      
+    spec:
+      containers:
+      - image: mongo:latest
+        name: moviedb     
+                
+        ports:
+        - containerPort: 27017
+          name: moviedb      
