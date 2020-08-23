@@ -6,5 +6,11 @@ logging:
 
 server:
   port: 8080
-
-#spring.data.mongodb.uri: mongodb://idgst-mongo:27017/digest
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
+spring.data.mongodb.uri: mongodb://moviedb:27017/spring-mongo
